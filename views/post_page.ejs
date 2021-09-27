@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link href="/static/mystyle.css" rel="stylesheet" />
+
+    <title>게시글 목록</title>
+    
+    <script>
+        $(document).ready(function () {
+            get_goods()
+        })
+
+        function get_goods() {
+            $("#contentdetail").empty()
+            $.ajax({
+                type: "GET",
+                url: `/api/contents`,
+                data: {},
+                success: function (response) {
+                    let contentlist = response["postpages"]
+                    console.log(response);
+                    for (let i = 0; i < contentlist.length; i++) {
+                        make_card(contentlist[i])
+                    }
+                }
+            })
+        }
+
+        function make_card(item) {
+            let htmlTemp = `<div class="num">num=${item["num"]}</div>
+                                <div class="title">
+                                    <a href="/inquire">title=${item["title"]}</a>
+                                </div>
+                                <div class="author">author=${item["author"]}</div>
+                                <div class="date">date=${item["date"]}</div>
+                                <div class="count">33</div>
+                            `
+            $("#contentdetail").append(htmlTemp)
+        }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-sparta jusify-content-end">
+        <a class="navbar-brand" href="/">
+            Main Home
+        </a>
+        <div class=navbar-button></div>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true"
+            aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="navbar-collapse collapse flex-grow-0 ml-auto" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto text-right">
+                <!-- <li class="nav-item" id="link-cart">
+                    <a class="nav-link" href="/cart">
+                        Cart<i class="fa fa-shopping-cart ml-2" aria-hidden="true"></i>
+                    </a>
+                </li> -->
+                <li class="nav-item" id="link-logout">
+                    <a class="nav-link" data-toggle="modal" data-target="#signOutModal">
+                        LogOut<i class="fa fa-sign-out ml-2" aria-hidden="true"></i>
+                    </a>
+                    <div class="modal text-left" id="signOutModal" tabindex="-1" role="dialog"
+                        aria-labelledby="signOutModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="signOutModalLabel">LogOut</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    로그아웃하시면 장바구니가 사라져요!
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-sparta" data-dismiss="modal">Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-sparta" onclick="sign_out()">LogOut
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--글쓰기 창-->
+    <div class ="board_wrap">
+        <div class="board_title">
+            <strong>Blog Board</strong>
+        </div>
+        <div class = "board_list_wrap">
+            <div class="board_list">
+                <div class="top">
+                    <div class="num">번호</div>
+                    <div class="title">제목</div>
+                    <div class="author">글쓴이</div>
+                    <div class="date">작성일</div>
+                    <div class="count">조회</div>
+                </div>
+                
+                <div id="contentdetail">
+                    <div class="num">1</div>
+                    <div class="title">
+                        <a href="/inquire">Hi, everyone</a>
+                    </div>
+                    <div class="author">Kim</div>
+                    <div class="date">2021.9.26</div>
+                    <div class="count">33</div>
+                </div>
+                
+            </div>
+            <div class="board_page">
+                <a href="#" class="bt first"><<</a>
+                <a href="#" class="bt prev"><</a>
+                <a href="#" class="num">1</a>
+                <a href="#" class="num">2</a>
+                <a href="#" class="num">3</a>
+                <a href="#" class="num">4</a>
+                <a href="#" class="num">5</a>
+                <a href="#" class="bt next">></a>
+                <a href="#" class="bt last">>></a>
+            </div>
+            <div class="bt_wrap">
+                <button>등록</button>
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
+
+
+

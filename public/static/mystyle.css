@@ -1,0 +1,235 @@
+.bg-sparta {
+    background-color: #e8344e !important;
+}
+
+.btn-sparta {
+    color: #ffffff !important;
+    background-color: #e8344e !important;
+    border-color: #e8344e !important;
+}
+
+.btn-outline-sparta {
+    color: #e8344e !important;
+    background-color: #ffffff !important;
+    border-color: #e8344e !important;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #ffffff;
+}
+
+.navbar-dark .navbar-nav .nav-link:focus, .navbar-dark .navbar-nav .nav-link:hover {
+    color: #ffffff;
+}
+
+.wrap {
+    width: 80%;
+    max-width: 600px;
+    margin: 10px auto;
+}
+
+.modal-header {
+    border-bottom-color: #ffffff;
+}
+
+.modal-footer {
+    border-top-color: #ffffff;
+}
+
+.alert {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+@media screen and (min-width: 576px) {
+    .alert {
+        width: fit-content;
+        max-width: 480px;
+    }
+}
+
+.alert-sparta {
+    color: #e8344e;
+    background-color: #ffe7ff;
+    border-color: #ffcde7;
+}
+
+.alert-sparta .alert-link {
+    color: #360000;
+}
+
+/* post_page */
+* {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+title {
+    display: none;
+}
+html {
+    font-size: 10px;
+}
+.bt_wrap {
+    margin-top: 30px;
+    text-align: center;
+}
+.bt_wrap a {
+    display: inline-block;
+    min-width: 80px;
+    margin-left: 10px;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 2px;
+    font-size: 1.4rem;
+}
+.bt_wrap a:first-child {
+    margin-left: 0;
+}
+.bt_wrap a.on {
+    background: #000;
+    color: #fff;
+}
+.board_list{
+    width: 100%;
+    border-top: 2px solid #000;
+}
+.board_list > div {
+    border-bottom: #ddd;
+    font-size: 0;
+}
+.board_list > div.top {
+    border-bottom: 1px solid #999; 
+}
+.board_list > div:last-child {
+    border-bottom: 1px solid #000;
+}
+.board_list > div > div {
+    display: inline-block;
+    padding: 15px 0;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.board_list > div.top > div {
+    font-weight: 600;
+}
+.board_list .num {
+    width: 10%;
+}
+.board_list .title {
+    width: 60%;
+    text-align: left;
+}
+.board_list .top .title {
+    text-align: center;
+}
+.board_list .author {
+    width: 10%;
+}
+.board_list .date {
+    width: 10%;
+}
+.board_list .count {
+    width: 10%;
+}
+.board_page {
+    margin-top: 30%;
+    text-align: center;
+    font-size: 0;
+}
+.board_page a {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    box-sizing: border-box;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    border-left: 0;
+    line-height: 100%;
+    
+}
+.board_page a.bt {
+    padding-top: 10px;
+    font-size: 1.2rem;
+    letter-spacing: -1px;
+}
+.board_page a.num {
+    padding-top: 9px;
+    font-size: 1.4rem;
+}
+.board_page a.num on {
+    border-color: #ffe7ff;
+    background: #ffe7ff;
+    color: #ffcde7;
+}
+.board_page a:first-child {
+    border-left: 1px solid #ddd;
+}
+.board_view {
+    width: 100%;
+    border-top: 2px solid #000;
+}
+.board_view .title {
+    padding: 20px 15px;
+    border-bottom: 1px dashed #ddd;
+    font-size: 2rem;
+}
+.board_view .info {
+    padding: 15px;
+    border-bottom: 1px solid #999;
+}
+.board_view .info dl {
+    position: relative;
+    display: inline-block;
+    padding:0 20px;
+}
+
+.board_view .info dl:first-child {
+    padding-left: 0;
+}
+
+.board_view.info dl::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left:0;
+    display: block;
+    width: 1px;
+    height: 13px;
+    background: red;
+}
+.board_view .info dl dt,
+.board_view .info dl dd{
+    display: inline-block;
+    font-size: 1.4rem;
+}
+/* .board_view .info dl dt {
+    ;
+} */
+.board_view .info dl dd {
+    margin-left: 10px;
+    color: #777;
+}
+/*write_page*/
+.board_write .title input[type="text"], .board_write .info input[type=text], 
+.board_write .info input[type="password"] {
+    width: 100%;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+.board_write .title dt, .board_write .title dd, .board_write .info dt, .board_write .info dd {
+    display: inline-block;
+    vertical-align: middle;
+}
