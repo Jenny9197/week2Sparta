@@ -23,8 +23,6 @@ const postPageRouter = require('./routers/postpage');
 app.use('/api', postPageRouter);
 //api 해당되는 파일들을  postpage에 저장 for api Server
 
-//app.use('/api', [postPageRouter])
-
 //Adding to install ejs
 //purpose: Recall file from ejs in webpage
 
@@ -58,3 +56,4 @@ app.get('/remove', (req, res) => {
 app.listen(port, () => {
     console.log(`listening at http://localhost:${port}`)
 })
+
