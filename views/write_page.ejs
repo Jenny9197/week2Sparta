@@ -29,7 +29,7 @@
 </head>
 <script>
     $(document).ready(function () {
-        posting()
+        
     });
     //등록
     function posting() {
@@ -61,7 +61,7 @@
         let author = $("#author").val()
         let password = $("#password").val()
         let content = $("#content").val()
-
+        //서버작동
         $.ajax({
             type: "POST",
             url: `/api/post`,
@@ -77,7 +77,6 @@
             success: function (response) {
                 if (response["result"] == "success") {
                     window.location.href = "/list";
-                    //console.log("ag");
                 }
             }
         });
@@ -118,7 +117,7 @@
             </div>
             <div class="bt_wrap">
                 <button onclick="posting()">글쓰기</button>
-                <a href="/modify" class="on">수정</a>
+                
                 <a href="/list">취소</a>
             </div>
         </div>
