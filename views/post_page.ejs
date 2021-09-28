@@ -1,3 +1,4 @@
+<!--게시물 목록 페이지-->
 <!doctype html>
 <html lang="en">
 
@@ -38,28 +39,31 @@
             $.ajax({
                 type: "GET",
                 url: `/api/contents`,
-                data: {},
-                success: function (response) {
-                    let contentlist = response["postpages"]
-                    console.log(response);
-                    for (let i = 0; i < contentlist.length; i++) {
-                        make_card(contentlist[i])
+                data: {}, 
+                success: function (response) { //서버로부터 response로 받음
+                    for (let i = 0; i < response.length; i++) {
+                        let _id = response[i]["_id"]
+                        let num = response[i]["num"]
+                        let date = response[i]["date"]
+                        let title = response[i]["title"]
+                        let author = response[i]["author"]
+                        let password = response[i]["password"]
+                        console.log(response);
+                        let htmlTemp = `
+                                <div class="title" style="text-align: center">
+                                    <a href="/inquire?_id=${_id}">${title}</a>
+                                </div>
+                                <div class="author">${author}</div>
+                                <div class="date">${date}</div>
+                                <div class="count">0</div>
+                            `
+                     $("#contentdetail").append(htmlTemp)
                     }
                 }
             })
         }
 
-        function make_card(item) {
-            let htmlTemp = `<div class="num">num=${item["num"]}</div>
-                                <div class="title">
-                                    <a href="/inquire">title=${item["title"]}</a>
-                                </div>
-                                <div class="author">author=${item["author"]}</div>
-                                <div class="date">date=${item["date"]}</div>
-                                <div class="count">33</div>
-                            `
-            $("#contentdetail").append(htmlTemp)
-        }
+        
     </script>
 </head>
 <body>
@@ -67,46 +71,6 @@
         <a class="navbar-brand" href="/">
             Main Home
         </a>
-        <div class=navbar-button></div>
-        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true"
-            aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-        <div class="navbar-collapse collapse flex-grow-0 ml-auto" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto text-right">
-                <!-- <li class="nav-item" id="link-cart">
-                    <a class="nav-link" href="/cart">
-                        Cart<i class="fa fa-shopping-cart ml-2" aria-hidden="true"></i>
-                    </a>
-                </li> -->
-                <li class="nav-item" id="link-logout">
-                    <a class="nav-link" data-toggle="modal" data-target="#signOutModal">
-                        LogOut<i class="fa fa-sign-out ml-2" aria-hidden="true"></i>
-                    </a>
-                    <div class="modal text-left" id="signOutModal" tabindex="-1" role="dialog"
-                        aria-labelledby="signOutModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="signOutModalLabel">LogOut</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    로그아웃하시면 장바구니가 사라져요!
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-outline-sparta" data-dismiss="modal">Cancel
-                                    </button>
-                                    <button type="button" class="btn btn-sparta" onclick="sign_out()">LogOut
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
     </nav>
     <!--글쓰기 창-->
     <div class ="board_wrap">
@@ -124,13 +88,13 @@
                 </div>
                 
                 <div id="contentdetail">
-                    <div class="num">1</div>
+                    <!-- <div class="num">1</div>
                     <div class="title">
                         <a href="/inquire">Hi, everyone</a>
                     </div>
                     <div class="author">Kim</div>
                     <div class="date">2021.9.26</div>
-                    <div class="count">33</div>
+                    <div class="count">33</div> -->
                 </div>
                 
             </div>
@@ -146,7 +110,7 @@
                 <a href="#" class="bt last">>></a>
             </div>
             <div class="bt_wrap">
-                <button>등록</button>
+                <button onclick="window.location.href='/writedetail'">등록</button>
             </div>
         </div>
     </div>
