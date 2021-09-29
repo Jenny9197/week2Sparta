@@ -15,6 +15,7 @@
         <!-- Font Awesome CSS -->
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
         <!-- Optional JavaScript -->
+        <title>My BLOGS | Jenny</title>
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous">
@@ -33,12 +34,12 @@
         <script>
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
-            const _id = urlParams.get("_id"); //("_id")는 라우터 값에서 불러온 것
-            inquireWindow();
+            const _id = urlParams.get("_id"); //
+            inquireWindow(); //순차적으로 아래의 함수대로 진행
 
             function inquireWindow(){
                 $.ajax({
-                url:`/api/writedetail/${_id}`,
+                url:`/api/writedetail/${_id}`, //ajax 안에 쿼리스트링 방법 적용 ** ("_id")는 라우터 값에서 불러온 것
                 type: 'GET',
                 data: {},
                 success: function(response) {
@@ -59,22 +60,46 @@
                 }
                 });
             }
+            function gotoedit() {
+                window.location.href="/modify?_id="+_id //ejs 문법 사용없이 함수적용
+            }
         </script>
+        <style>
+            body {
+                background-color: beige;
+            }
+            .bg-sparta {
+                background-color: #f595e5 !important;
+            }
+
+            .btn-sparta {
+                color: #ffffff !important;
+                background-color: #e8344e !important;
+                border-color: #e8344e !important;
+            }
+
+            .btn-outline-sparta {
+                color: #e8344e !important;
+                background-color: #ffffff !important;
+                border-color: #e8344e !important;
+            }
+        </style>
     </head>
 
     <body>
         <div class="board_write">
             <div class="title">
                 <label for="title">Title :</label>
-                <input type = "text" id="title" placeholder="your title.."><br>
+                <input type = "text" id="title" placeholder="Your title..."><br>
                 <label for="author">Author :</label>
-                <input type = "text" id="author" placeholder="your name.."><br>
+                <input type = "text" id="author" placeholder="Your name..."><br>
                 <label for="date">Date :</label>
                 <input type = "text" id="date" placeholder="Today's date"><br>
                 <label for="content">Subject :</label>
                 <input type = "text" id="content" placeholder="Write something.."><br>
             </div> 
         </div>
-        <button type="button" class="btn btn-primary btn-sm" a href="/">수정하기</button>
+        <button onclick="gotoedit()">수정하기</button>
     </body>
 </html>
+
