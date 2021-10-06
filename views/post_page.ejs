@@ -27,40 +27,61 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <link href="/static/mystyle.css" rel="stylesheet" />
 
-    <title>게시글 목록</title>
+    <style>
+        .board_list{
+            width: 100%;
+            border-top: 2px solid #000;
+            background-color: rgba(255, 255, 128, .5);
+        }
+        .board_page {
+            margin-top: 30%;
+            text-align: center;
+            font-size: 0;
+        }
+        .bt_wrap {
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+    <title>게시글 목록</title> 
     
     <script>
         $(document).ready(function () {
             get_goods()
         })
         function get_goods() {
-            //$("#contentdetail").empty()
+            $("#contentdetail").empty()
             $.ajax({
                 type: "GET",
-                url: `/api/contents`,
+                url: `/api/list`,
                 data: {}, 
                 success: function (response) { //서버로부터 response로 받음
-                    for (let i = 0; i < response.length; i++) {
-                        let _id = response[i]["_id"]
-                        let num = response[i]["num"]
-                        let date = response[i]["date"]
-                        let title = response[i]["title"]
-                        let author = response[i]["author"]
-                        let password = response[i]["password"]
-                        console.log(response);
-                        let htmlTemp = `
-                                        <div class="title" style="text-align: center">
-                                            <a href="/inquire?_id=${_id}">${title}</a>
-                                        </div>
-                                        <div class="author">${author}</div>
-                                        <div class="date">${date}</div>
-                                        <div class="count">0</div>
-                                        `
-                        $("#contentdetail").append(htmlTemp)
+                    let answerbox = response["list"]
+                    for (let i = 0; i < answerbox.length; i++) {
+                        
+                   
+                        make_card(answerbox[i])
                     }
                 }
-            })
+            });
         }
+        function make_card(answerbox) {
+            let _id = answerbox["_id"]
+            let title = answerbox["title"]
+            let author = answerbox["author"]
+            let date = answerbox["date"]
+            let password = answerbox["password"]
+            console.log(answerbox);
+            let temphtml = `<tr>                   
+                                <th><a href="/inquire?_id=${_id}">${title}</a></th>
+                                <td>${author}</td>
+                                <td>${date}</td>
+                            <tr>`
+                        
+            $("#contentdetail").append(temphtml)
+        }
+                        
+                    
     </script>
 </head>
 <body>
@@ -68,6 +89,8 @@
         <a class="navbar-brand" href="/">
             Main Home
         </a>
+        <button onclick="window.location.href='/register'">회원가입</button>
+        <button onclick="window.location.href='/signIn'">로그인</button>
     </nav>
     <!--글쓰기 창-->
     <div class ="board_wrap">
@@ -77,26 +100,37 @@
         <div class = "board_list_wrap">
             <div class="board_list">
                 <div class="top">
-                    <thead>
-                       <div class="num">번호</div>
-                       <div class="title">제목</div>
-                       <div class="author">글쓴이</div>
-                       <div class="date">작성일</div>
-                       <div class="count">조회</div> 
-                    </thead>
-                    <tbody>
-                        <div id="contentdetail">
-                        <!-- <div class="num">1</div>
-                        <div class="title">
-                        <a href="/inquire">Hi, everyone</a>
-                        </div>
-                        <div class="author">Kim</div>
-                        <div class="date">2021.9.26</div>
-                        <div class="count">33</div> -->
-                        </div>
-                    </tbody>
+                    <table id = comment-list>
+                        <thead>
+                            <tr>
+                                <th>title</th>
+                                
+                                <th>author</th>
+                                
+                                <th>date</th>
+                            </tr>
+                        </thead>
+                        <!-- <div id = "contentdetail"></div> -->
+                        <tbody id="contentdetail">
+                            <tr>
+                                <th><a href="/inquire"></a></th>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                            <!-- <div class="num">1</div>
+                            <div class="title">
+                            <a href="/inquire">Hi, everyone</a>
+                            </div>
+                            <div class="author">Kim</div>
+                            <div class="date">2021.9.26</div>
+                            <div class="count">33</div> -->
+                        
+                    
             </div>
+        </div>
             <div class="board_page">
                 <a href="#" class="bt first"><<</a>
                 <a href="#" class="bt prev"><</a>
@@ -110,6 +144,7 @@
             </div>
             <div class="bt_wrap">
                 <button onclick="window.location.href='/writedetail'">등록</button>
+                <!-- <button onclick="window.location.href='/register'">회원가입</button> -->
             </div>
         </div>
     </div>

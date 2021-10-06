@@ -63,11 +63,7 @@
             vertical-align: middle;
         }        
     </style>
-    <title>
-        <p class="bnTitle">
-            " 게시물 작성 "
-        </p>
-    </title>
+    
     
     <script>
         $(document).ready(function () {
@@ -76,29 +72,7 @@
         //등록
         function posting() {
             let today = new Date(); //오늘 날짜 가져오고
-            let year = today.getFullYear();
-            let month = ('0' + (today.getMonth() + 1)).slice(-1);
-            let day = ('0' + today.getDate()).slice(-2);
-            var hour = today.getHours();
-            hour = hour < 10 ? '0' + hour.toString() : hour.toString();
-            var minites = today.getMinutes();
-            minites = minites < 10 ? '0' + minites.toString() : minites.toString();
-            var seconds = today.getSeconds();
-            seconds = seconds < 10 ? '0' + seconds.toString() : seconds.toString();
-
-            let components = [
-                today.getYear(),
-                today.getMonth(),
-                today.getDate(),
-                today.getHours(),
-                today.getMinutes(),
-                today.getSeconds(),
-                today.getMilliseconds()
-            ];
-            let num = components.join('');
-            let dateString = year + month + day + hour + minites + seconds;
-            console.log(dateString);
-            //let findDate = year + "년" + month + "월" + day + "일";
+            console.log(typeof today);
             let title = $('#title').val()
             let author = $("#author").val()
             let password = $("#password").val()
@@ -106,30 +80,34 @@
             //서버작동
             $.ajax({
                 type: "POST",
-                url: `/api/post`,
+                url: `/api/serve`,
                 data: {
-                    "num": num, //post 번호
-                    "date": dateString, //내림차순으로 하려고 numbering
+                    
+                    "date": today,//내림차순으로 하려고 numbering
                     "title": title,
                     "author": author,
                     "password": password,
                     "content": content,
                 },
                 
-                success: function (response) {
-                    if (response["result"] == "success") {
+                success: function (answerbox) {
+                    if (answerbox["result"] == "success") {
                         alert('글 업데이트 완료'); 
                         window.location.href = "/list";
                     }
                 }
             });
         }
+        function closing() {
+            alert('작성된 게시물이 취소되었습니다');
+            window.location.href = "/list";
+        }
     </script>
     <body>
         <div>
             <div class="board_write_wrap">
                 <div class="board_write">
-                    <div class="title">
+                    <div class="title"> 
                         <dl>
                             <dt>제목</dt>
                             <dd>
@@ -157,7 +135,7 @@
                 </div>
                 <div class="bt_wrap">
                     <button onclick="posting()">글쓰기</button>
-                    <a href="/list">취소</a>
+                    <button onclick="closing()">취소</button>
                 </div>
             </div>
         </div>

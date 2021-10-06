@@ -1,4 +1,4 @@
-<!--게시물 조회 페이지-->
+<!--게시물 조회 상세페이지-->
 <!doctype html>
 <html lang="en">
 
@@ -60,7 +60,9 @@
                 }
                 });
             }
+            //수정창으로 이동하기
             function gotoedit() {
+                alert('수정페이지로 이동하시겠습니까?')
                 window.location.href="/modify?_id="+_id //ejs 문법 사용없이 함수적용
             }
         </script>

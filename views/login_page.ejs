@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous" />
+
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <link rel="stylesheet" href="css/css.css" />
+</head>
+
+<title>로그인 | Jenny</title>
+<script>
+    //등록
+    function loginStep() {
+        let nickname = $("#input-nickname").val();
+        let password1 = $("#input-password").val();
+        //let login = $("#login").val();
+        //let password2 = $("#input-password2").val()
+         
+        if(nickname =="") {
+            $("#helpNickname").text("닉네임을 입력해주세요");
+            $("#input-nickname").focus()
+            return;
+        } else {
+            $("#help-password-login").text("")
+        }
+        console.log(nickname, password1)
+        //서버작동
+        $.ajax({
+            type: "POST",
+            url: `/api/signIn`,
+            data: {
+                nickname: nickname,
+                password1: password1,
+            },
+
+            success: function (loginbox) {
+                $.cookie('mytoken', loginbox['token'], {path: '/'});
+                window.location.replace("/list")
+                
+            },
+            error: function (error) { 
+                alert(error.responseJSON.errorMessage); 
+            },
+        })    
+        function makeNew() {
+            return alert(loginbox['회원 되신것을 축하합니다']);
+            window.location.href = "/list"; //작동안함
+        }  
+    }
+</script>
+<style>
+    body {
+        background-color: rgb(230, 209, 230);
+    }
+    .h1, .h4 {
+        font-family: 'Do-hyeon', 'sans-serif';
+    }
+</style>
+<p><h1></h1></p>
+<body>
+    <div class="join-content">
+        <div class="join-row">
+            <h4 class="join-name">
+                <label for="join-nick">닉네임</label>
+                <input id="input-nickname" type="text">
+            </h4>
+        </div>
+        <div class="join-row">
+            <h4 class="join-password">
+                <label for="join-pwd">비밀번호</label>
+                <input id="input-password" type="password">
+            </h4>
+        </div>
+    </div>
+    <!-- 로그인 버튼 클릭하기 ->  -->
+    <div class="bt_wrap">
+        <button onclick="loginStep()">로그인</button>
+        <button id="join-btn">회원가입</button>
+    </div>
+</body>
+
+</html>

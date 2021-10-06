@@ -82,44 +82,82 @@
         <script>
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
-            const edit = urlParams.get("edit"); //("_id")는 라우터 값에서 불러온 것
-            
+            const _id = urlParams.get("_id"); //("_id")는 라우터 값에서 불러온 것
             $(document).ready(function () {
-                get_detail()
+                 get_detail() 
             })
             function get_detail() {
                 $.ajax({
                     type: "GET",
-                    url: `api/modify`,
+                    url: `api/writedetail/${_id}`,
                     data: {},
                     success: function (response) {
-                        let modifyDetail= response['']
-                        console.log(modifyDetail)
-                        let title = response[''][]
-                        let author = response[''][]
-                        let date = response[''][]
-                        let password = response[''][]
-                        let content = response[''][]
-
-                        $('#title').val(title);
-                        $('#date').val(date);
-                        $('#content').val(content);
+                        let postdetail = response['inquirelist'];
+                    console.log(postdetail)
+                    let title = response['inquirelist']['title']
+                    let author = response['inquirelist']['author']
+                    let date = response['inquirelist']['date']
+                    let content = response['inquirelist']['content']
+                    
+                    $('#mtitle').val(title);
+                    $('#content').val(content);
+                    
                     }
                 });
             }
 
-            // function finish_window(){
-            //     $.ajax({
-                    
-            //     })
-            // }   
+            function post_detail() {
+                let title = $("#mtitle").val()
+                let password = $("#pwd").val()
+                let content = $("#content").val()
+                $.ajax({
+                    type: "PATCH",
+                    url: `api/writedetail/${_id}`,
+                    data: {
+                        title: title,
+                        password: password,
+                        content: content,
+                    },
+                    success: function (response) {
+                        response["msg"] 
+                        alert(response["msg"]); 
+                        window.location.href='/inquire?_id='+_id;
+                    },
+                    error: function (error) { 
+                        // console.log(error) 
+                        // alert("비밀번호를 다시 한번 확인해주세요"); 
+                        // 강의에서 알려준 에러메세지 팁
+                        // exp) 에러메세지를 가져온 후 json 형식으로 변환한 후,
+                        // 안에 있는 메세지를 가져온다
+                        alert(error.responseJSON.msg);
+                    }
+                });
+            }
 
-            //비밀번호 값이 true일때 작용하는 역할
-            // function edit_window(){
-            //     $.ajax({
+            function delete_detail() {
+                let password = $("#pwd").val()
                 
-            //     })
-            // }   
+                $.ajax({
+                    type: "DELETE",
+                    url: `api/writedetail/${_id}`,
+                    data: {
+                        password: password,
+                    },
+                    success: function (response) {
+                        response["msg"] 
+                        alert(response["msg"]); 
+                        window.location.href='/list' //delete 후 목록으로 이동
+                    },
+                    error: function (error) { 
+                        // console.log(error) 
+                        // alert("비밀번호를 다시 한번 확인해주세요"); 
+                        // 강의에서 알려준 에러메세지 팁
+                        // exp) 에러메세지를 가져온 후 json 형식으로 변환한 후,
+                        // 안에 있는 메세지를 가져온다
+                        alert(error.responseJSON.msg);
+                    }
+                });
+            }
         </script>
     </head>
 
@@ -144,8 +182,8 @@
                     <input type = "text" id = "content" name = "content" value=""><br>
                 </div>
                 <div>
-                    <button onclick="window.location.href='/inquire'">수정 완료</button>
-                    <button onclick="window.location.href='/list'">삭제</button>
+                    <button onclick="post_detail()">수정 완료</button>
+                    <button onclick="delete_detail()">삭제</button>
                 </div>
             </section>
         </div>
