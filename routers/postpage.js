@@ -7,6 +7,9 @@ const signupAuth = require("../routers/signup");
 const jwt = require("jsonwebtoken");
 const { db } = require("../schemas/postpage");
 
+//미들웨어 user.js insertion
+const userIdCheck = require("../middlewares/user");
+
 const router = express.Router();
 
 router.post("/serve", async (req, res, next) => {
@@ -90,6 +93,7 @@ router.get("/writedetail/:_id", async (req, res, next) => {
   }
 });
 
+//로그인
 router.post("/signIn", async (req, res) => {
   const { nickname, password1 } = req.body;
   const user = await newuser.findOne({ nickname });
@@ -103,13 +107,23 @@ router.post("/signIn", async (req, res) => {
     });
     return;
   }
-  res.cookie("user",token,{maxAge: 300000})
-  // res.send({
-  //   token: jwt.sign({ userId: user.nickname }, "customized-secret-key"), //token 발급됨
+
+  //token 생성
+  let token = jwt.sign({ userId: user.nickname }, "customized-secret-key") //token 발급됨
+  //cookie 안에 user 이름으로 token을 저장 (180분) 
+  res.cookie("user",token,{maxAge: 1000 * 60 * 60}),
+  //정상작동되었음을 알려줌
+  res.status(200).send({});
+  
+  // let token = jwt.sign({ id: users["id"] , name: users["name"] }, secretObj.secret ,{expiresIn: '5m' }) 
     
-    
-  // });
+
 });
+
+//로그인 사용자가 페이지에 접속한 경우
+router.get("/checkSign", userIdCheck, async(req, res) => {
+   res.status(200).send({'success' : "로그인이 되어 있습니다."}) 
+})
 
 //게시글 삭제 기능
 router.delete("/writedetail/:_id", async (req, res, next) => {
@@ -151,6 +165,67 @@ router.patch("/writedetail/:_id", async (req, res, next) => {
   } catch (err) {
     res.status(400).send({ msg: "수정 글이 완성되지 못했습니다" });
   } //error catch
+});
+//........................................................................................//
+//댓글 작성 기능 
+router.post("/commentwrite/:_id", async (req, res) => {
+  try {
+    const postId = req.params;
+    const { date, user, commentbox } = await req.body;
+    const updatetext = await postpage.findOneAndUpdate(
+      {_id:postId},
+      {
+        $push: {
+          comment:{
+            date, user, commentbox
+          },
+        }
+      })
+      updatetext.save();
+      res.status(200).send({msg: "댓글 작성 완료했습니다"});
+    } catch {
+      res.status(400).send({msg: "댓글 내용을 입력해주세요"});
+    }
+});
+//..........................................................................................
+//댓글 삭제 기능
+router.delete("/commentwrite/:_id", async (req, res) => {
+  const postId = req.params;
+  const {_dbId} = req.body; //find which 댓글
+
+  try {
+    const post = await postpage.findOne({_id:postId}); //게시글찾기
+    if (post === null) { //post==parents, comment=child
+      res.status(400).send({msg: '존재하지 않는 게시물입니다'});
+    } 
+    const storage = post.comment.id(_dbId) // (==findbyId), subdocument 방식, POST 에 COMMENT 의 아이디값인 dbId를 찾기
+    storage.remove() //subdocument 에서 찾아서 제거함
+    post.save() //부모를 저장함
+    res.status(200).send({msg: '댓글 삭제를 완료했습니다' });
+
+  } catch (err) {
+        res.status(400).send({ msg: "더이상 댓글이 존재하지 않습니다"});
+  }
+});
+//................................................................................................
+//댓글 수정 기능
+router.patch("/commentwrite/:_id", async (req, res) => {
+  const postId = req.params;
+  const {_dbId, comment} = req.body;
+  
+  try {
+    const post = await postpage.findOne({_id:postId}); //게시글찾기
+    if (post === null) { //post==parents, comment=child
+      res.status(400).send({msg: '존재하지 않는 게시물입니다'});
+    } 
+    const storage = post.comment.id(_dbId) // (==findbyId), subdocument 방식, POST 에 COMMENT 의 아이디값인 dbId를 찾기
+    storage.commentbox = comment //subdocument에서 commentbox를 comment로 교체 
+    post.save() //부모를 저장함
+    res.status(200).send({msg: '댓글 수정을 완료했습니다' });
+
+  } catch (err) {
+        res.status(400).send({ msg: "더이상 댓글이 존재하지 않습니다"});
+  }
 });
 
 module.exports = router;
