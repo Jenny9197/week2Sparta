@@ -1,125 +1,156 @@
-const express = require('express');
-const bcrypt = require('bcrypt'); //암호화하는 기능
-const postpage = require('../schemas/postpage');
+const express = require("express");
+const bcrypt = require("bcrypt");
+const saltRound = 10;
+const postpage = require("../schemas/postpage");
+const newuser = require("../schemas/login");
+const signupAuth = require("../routers/signup");
+const jwt = require("jsonwebtoken");
+const { db } = require("../schemas/postpage");
 
 const router = express.Router();
 
-router.post("/post", async (req, res, next) =>{
-    try {
-        const { num, date, title, author, password, content } = await req.body;
-        console.log(num, date, title);
-        const encryptedPassword = bcrypt.hashSync(password, 12) //암호화하는 기능
-        await postpage.create ({
-            num:num,
-            date:date, 
-            title:title,
-            author:author, 
-            password:password,
-            content:content
-        });
-        res.send({result:"success"}); //여기서 success는 태그의 의미
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
+router.post("/serve", async (req, res, next) => {
+  try {
+    const { date, title, author, password, content } = await req.body;
+
+    //console.log(date, title, author);
+    await postpage.create({
+      date: date,
+      title: title,
+      author: author,
+      password: password,
+      content: content,
+    });
+    res.send({ result: "success" }); //여기서 success는 태그의 의미 값이다
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 });
 
-//게시글 목록 조회
-router.get("/contents", async (req, res, next) => {
-    try {
-        const postpages = await postpage.find({  }).sort(" date");
-        res.send(postpages); //db에서 postpage를 불러서 데이터가 res.send 값으로 보내주는것 
-    } catch (err) {
-        console.error(err);
-        next(err);
+//회원가입 구현하기(10.04.2021)
+router.post("/register", async (req, res) => {
+  const { email, nickname, password1, password2 } = req.body;
+
+  if (
+    signupAuth.nickAuth(nickname) &&
+    signupAuth.pwAuth(password1, password2)
+  ) {
+    let exist = await newuser.find({ nickname });
+
+    //console.log("여기는 true");
+    if (!exist.length) {
+      await newuser.create({ email, password1, nickname });
+      res.send({
+        result: "success",
+        msg: "성공",
+      });
+      return;
+    } else {
+      // console.log("여기는 중복");
+      res.send({
+        result: "Fail",
+        msg: "중복된 닉네임입니다",
+      });
+      return;
     }
+  } else {
+    //console.log("여기는 실패");
+    res.send({
+      result: "Fail",
+      msg: "닉네임 또는 비밀번호 확인해주세요",
+    });
+    //res.send({result : "success"});
+    return;
+  }
 });
 
-//작성페이지 상세조회
+//게시글 목록 조회(post_page)
+router.get("/list", async (req, res, next) => {
+  try {
+    const postpages = await postpage.find({}).sort("-_id"); //db
+    res.send({ list: postpages }); //db에서 postpage를 불러서 데이터가 res.send 값으로 보내주는것
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+//작성페이지 상세조회(inquire_page)
 //:_id 에 params 값이 저장
 router.get("/writedetail/:_id", async (req, res, next) => {
-    const postId = req.params;
-    try {
-        const inquirelist = await postpage.findOne({_id:postId})
-        res.json({ inquirelist: inquirelist});
-    } catch (err) {
-        console.error(err);
-        next(err);
-    }
+  const postId = req.params;
+  console.log(postId);
+  try {
+    const inquirelist = await postpage.findOne({ _id: postId });
+    res.json({ inquirelist: inquirelist });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 });
 
-//미완성 from here, but keep editing after 12am on Sept 30th 2021//
-//게시글 수정
-// router.put("/inquire/:num", async (req, res) => {
-//     const {num} = req.params;
-//     const {date, title, author, password, content} = req.body;
-//     const postpage = await postpage.findItem({num:num});
+router.post("/signIn", async (req, res) => {
+  const { nickname, password1 } = req.body;
+  const user = await newuser.findOne({ nickname });
+  var cookie = require('cookie-parser');
 
-//     console.log(bcrypt.compareSync(pwd, postpage["password"]))
+  // NOTE: 인증 메세지는 자세히 설명하지 않는것을 원칙으로 한다: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#authentication-responses
 
-//     if(!bcrypt.compareSync(password, postpage["password"])){
-//         res.send({ result: "fail"});
-//     } else{
-//         await postpage.update({num}, {$set:{title}})
-//         await postpage.update({num}, {$set:{author}})
-//         await postpage.update({num}, {$set:{content}})
-//         res.send({ result: "success"});
-//     }
-// });
+  if (!user || password1 !== user.password1) {
+    res.status(400).send({
+      errorMessage: "이메일 또는 패스워드가 틀렸습니다.",
+    });
+    return;
+  }
+  res.cookie("user",token,{maxAge: 300000})
+  // res.send({
+  //   token: jwt.sign({ userId: user.nickname }, "customized-secret-key"), //token 발급됨
+    
+    
+  // });
+});
 
-//게시글 삭제
-// router.get("/delete/:num", async (req, res) => {
-//     console.log('GET : /deleteBoard 삭제폼 요청');
-//     const board_no = parseInt(req.params.board_no);
-//     console.log(board_no);
-//     res.render('deleteBoard',{deleteBoard:board_no});
-// });   
-// router.post('/deleteBoard', (req, res) => {
-//     console.log('POST : /deleteBoard 삭제처리');
-//     const board_no = req.body.board_no;
-//     const board_pw = req.body.board_pw;
-//     conn.query('DELETE FROM board WHERE board_no=? AND board_pw=?'
-//             ,[board_no, board_pw], (err, rs) => {
-//         if(err) {
-//             console.log(err);
-//             res.end();
-//         }else {
-//             res.redirect('boardList');
-//         }
-//     });
-// });
+//게시글 삭제 기능
+router.delete("/writedetail/:_id", async (req, res, next) => {
+  const postId = req.params;
+  const {password} = req.body;
+  
+  try {
+    const postingpwd = await postpage.findOne({_id:postId});
 
+    if(postingpwd["password"] === password){
+      await postingpwd.deleteOne();
+    //   await postpage.deleteOne({ _id: postId });
+      res.status(200).send({ msg: "삭제완료하였습니다" });
+    } else {
+        res.status(400).send({ msg: "비밀번호를 다시 입력해주세요"});
+    }
+  } catch (err) {
+        res.status(400).send({ msg: "존재하지 않는 게시물입니다" });
+  }
+});
 
-
-//게시글 검색
-// router.get("/seek", async (req, res) => { //from title
-//     const {seekcontent, category} = req.query;
-//     if(category == "title"){
-//         const info = await postpage.find({title: new RegExp(seekcontent)}).sort("-date")
-//         res.json({info:info});
-//     }
-//     else if(category == "author"){ //from author
-//         const info = await postpage.find({author: new RegExp(seekcontent)}).sort("-date")
-//         res.json({info:info});
-//     }
-//     else if(category == "date"){ //from date
-//         const info = await postpage.find({date: new RegExp(seekcontent)}).sort("-date")
-//         res.json({info:info});
-//     }
-//     else if(category == "etc"){//entire 
-//         console.log(seekcontent)
-//         const info = await postpage.find({$or: [{title: new RegExp(seekcontent)}, {author: new RegExp(seekcontent)}, {date: new RegExp(seekcontent)}]}).sort("-date")
-//         console.log(info)
-//         res.json({info:info})
-//         //find the item out of three 
-//     }
-//     else {
-//         const err = new Error("No search to find objects")
-//         err.status = 404
-//         throw err
-//     }
-//     const postpage = await Post.find({$or: options})
-//});
+//게시글 수정 기능
+router.patch("/writedetail/:_id", async (req, res, next) => {
+  try {
+    const postId = req.params;
+    const { title, password, content } = await req.body; //data
+    console.log(title, password, content)
+    //페이지 찾기
+    const posting = await postpage.findOne({ _id: postId });
+    console.log(posting)
+    //db.collection.update({ updateQuery });
+    if (posting["password"] === password) {
+      await posting.updateOne({ title, content });
+      await posting.save();
+      res.status(200).send({ msg: "수정완료하였습니다" });
+    } else {
+        res.status(400).send({msg: "비밀번호 불일치"})
+    }
+  } catch (err) {
+    res.status(400).send({ msg: "수정 글이 완성되지 못했습니다" });
+  } //error catch
+});
 
 module.exports = router;
-
