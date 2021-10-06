@@ -25,7 +25,11 @@
             integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
             crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        
+        <!--공통 CSS-->
         <link rel="stylesheet" href="css/css.css">
+        <!--ajax 불러주는 부분-->
+        <script type="text/javascript" src="../public/static/callFunc.js"></script>
 
         <title>My BLOGS| Jenny</title>
         <style>
@@ -84,7 +88,8 @@
             const urlParams = new URLSearchParams(queryString);
             const _id = urlParams.get("_id"); //("_id")는 라우터 값에서 불러온 것
             $(document).ready(function () {
-                 get_detail() 
+                 get_detail()
+                 callFunc() 
             })
             function get_detail() {
                 $.ajax({
