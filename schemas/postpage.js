@@ -1,14 +1,11 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const {schema} = mongoose;
 const postpageSchema = new mongoose.Schema({
-    num: {
-        type: Number,
-        required: true,
-        unique: true
-    },
+
     date : {
-        type: Number,
+        type: Date,
         required: true,
     },
     title : {
@@ -21,6 +18,7 @@ const postpageSchema = new mongoose.Schema({
     },
     password : {
         type: String,
+        minlength: 4,
         required: true
     },
     content : {
@@ -29,6 +27,10 @@ const postpageSchema = new mongoose.Schema({
     },
 
 });
+
+
+
+
 
 //변경 전:let postpage = mongoose.model("postpage", postpageSchema);
 //변경 후 (after mongoose 구조 만들기)
