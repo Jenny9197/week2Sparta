@@ -25,9 +25,27 @@ const postpageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    comment : {
+        type: [commentBoxSchema],
+        required: false
+    }
 
 });
 
+const commentBoxSchema = new Schema ({
+    commentbox: {
+        type: String,
+        required: true
+    },
+    user : {
+        type: String,
+        required: true
+    },
+    date : {
+        type: Date,
+        required: true
+    }
+});
 
 
 
