@@ -1,4 +1,4 @@
-<!--게시물 조회 상세페이지-->
+<!--게시물 상세페이지-->
 <!doctype html>
 <html lang="en">
 
@@ -65,6 +65,11 @@
                 alert('수정페이지로 이동하시겠습니까?')
                 window.location.href="/modify?_id="+_id //ejs 문법 사용없이 함수적용
             }
+            //게시물 목록페이지로 이동하기
+            function main() {
+                alert('게시물창으로 이동하시겠습니까?')
+                window.location.href="/list" //수정 전 or 후에 게시물 목록으로 이동
+            }
         </script>
         <style>
             body {
@@ -85,6 +90,9 @@
                 background-color: #ffffff !important;
                 border-color: #e8344e !important;
             }
+            .title {
+                margin: auto;
+            }
         </style>
     </head>
 
@@ -102,6 +110,7 @@
             </div> 
         </div>
         <button onclick="gotoedit()">수정하기</button>
+        <button onclick="main()">메인으로</button>
     </body>
 </html>
 

@@ -55,7 +55,6 @@
             },
 
             success: function (loginbox) {
-                $.cookie('mytoken', loginbox['token'], {path: '/'});
                 window.location.replace("/list")
                 
             },
