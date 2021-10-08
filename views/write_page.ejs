@@ -1,157 +1,171 @@
 <!--게시물 작성 페이지-->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon" />
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
-        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous"
+    />
 
     <!-- Font Awesome CSS -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link
+      href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.js"
-        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
-        integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous">
-    </script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"
+      integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s"
+      crossorigin="anonymous"
+    ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-    <link rel="stylesheet" href="css/css.css">
+    <link rel="stylesheet" href="css/css.css" />
 
     <script type="text/javascript" src="../public/static/callFunc.js"></script>
-</head>
-<title>My BLOGS | Jenny</title>
-<style>
+  </head>
+  <title>My BLOGS | Jenny</title>
+  <style>
     .bg-sparta {
-        background-color: #f595e5 !important;
+      background-color: #f595e5 !important;
     }
 
     .btn-sparta {
-        color: #ffffff !important;
-        background-color: #e8344e !important;
-        border-color: #e8344e !important;
+      color: #ffffff !important;
+      background-color: #e8344e !important;
+      border-color: #e8344e !important;
     }
 
     .btn-outline-sparta {
-        color: #e8344e !important;
-        background-color: #ffffff !important;
-        border-color: #e8344e !important;
+      color: #e8344e !important;
+      background-color: #ffffff !important;
+      border-color: #e8344e !important;
     }
 
     body {
-        background-color: beige;
+      background-color: beige;
     }
 
     .board_write .title input[type="text"],
-    .board_write .info input[type=text],
+    .board_write .info input[type="text"],
     .board_write .info input[type="password"] {
-        width: 100%;
-        padding-top: 10px;
-        padding-right: 10px;
-        padding-bottom: 10px;
-        padding-left: 10px;
-        box-sizing: border-box;
-
+      width: 100%;
+      padding-top: 10px;
+      padding-right: 10px;
+      padding-bottom: 10px;
+      padding-left: 10px;
+      box-sizing: border-box;
     }
 
     .board_write .title dt,
     .board_write .title dd,
     .board_write .info dt,
     .board_write .info dd {
-        display: inline-block;
-        vertical-align: middle;
+      display: inline-block;
+      vertical-align: middle;
     }
-</style>
+  </style>
 
-
-<script>
+  <script>
     $(document).ready(function () {
-        callFunc()
+      callFunc();
     });
     //등록
     function posting() {
-        let today = new Date(); //오늘 날짜 가져오고
-        console.log(typeof today);
-        let title = $('#title').val()
-        let author = $("#author").val()
-        let password = $("#password").val()
-        let content = $("#content").val()
-        //서버작동
-        $.ajax({
-            type: "POST",
-            url: `/api/serve`,
-            data: {
+      let today = new Date(); //오늘 날짜 가져오고
+      console.log(typeof today);
+      let title = $("#title").val();
+      let author = $("#author").val();
+      let password = $("#password").val();
+      let content = $("#content").val();
+      //서버작동
+      $.ajax({
+        type: "POST",
+        url: `/api/serve`,
+        data: {
+          date: today, //내림차순으로 하려고 numbering
+          title: title,
+          author: author,
+          password: password,
+          content: content,
+        },
 
-                "date": today, //내림차순으로 하려고 numbering
-                "title": title,
-                "author": author,
-                "password": password,
-                "content": content,
-            },
-
-            success: function (answerbox) {
-                if (answerbox["result"] == "success") {
-                    alert('글 업데이트 완료');
-                    window.location.href = "/list";
-                }
-            }
-        });
+        success: function (answerbox) {
+          if (answerbox["result"] == "success") {
+            alert("글 업데이트 완료");
+            window.location.href = "/list";
+          }
+        },
+      });
     }
 
     function closing() {
-        alert('작성된 게시물이 취소되었습니다');
-        window.location.href = "/list";
+      alert("작성된 게시물이 취소되었습니다");
+      window.location.href = "/list";
     }
-</script>
+  </script>
 
-<body>
+  <body>
     <div>
-        <div class="board_write_wrap">
-            <div class="board_write">
-                <div class="title">
-                    <dl>
-                        <dt>제목</dt>
-                        <dd>
-                            <input type="text" id="title" placeholder="제목 입력">
-                        </dd>
-                    </dl>
-                </div>
-                <div class="info">
-                    <dl>
-                        <dt>작성자</dt>
-                        <dd>
-                            <input type="text" id="author" placeholder="작성자 입력">
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt>비밀번호</dt>
-                        <dd>
-                            <input type="password" id="password" placeholder="비밀번호 입력">
-                        </dd>
-                    </dl>
-                </div>
-                <div class="content">
-                    <textarea placeholder="내용 입력" id="content"></textarea>
-                </div>
-            </div>
-            <div class="bt_wrap">
-                <button onclick="posting()">글쓰기</button>
-                <button onclick="closing()">취소</button>
-            </div>
+      <div class="board_write_wrap">
+        <div class="board_write">
+          <div class="title">
+            <dl>
+              <dt>제목</dt>
+              <dd>
+                <input type="text" id="title" placeholder="제목 입력" />
+              </dd>
+            </dl>
+          </div>
+          <div class="info">
+            <dl>
+              <dt>작성자</dt>
+              <dd>
+                <input type="text" id="author" placeholder="작성자 입력" />
+              </dd>
+            </dl>
+            <dl>
+              <dt>비밀번호</dt>
+              <dd>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="비밀번호 입력"
+                />
+              </dd>
+            </dl>
+          </div>
+          <div class="content">
+            <textarea placeholder="내용 입력" id="content"></textarea>
+          </div>
         </div>
+        <div class="bt_wrap">
+          <button onclick="posting()">글쓰기</button>
+          <button onclick="closing()">취소</button>
+        </div>
+      </div>
     </div>
-</body>
-
-
-
+  </body>
 </html>
