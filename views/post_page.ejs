@@ -42,6 +42,12 @@
             margin-top: 30px;
             text-align: center;
         }
+        .commentTable {
+            justify-content: space-between;
+            align-items: center;
+            display: flex;
+            width: 500px;
+        }
     </style>
     <title>게시글 목록</title> 
     
@@ -89,8 +95,11 @@
         <a class="navbar-brand" href="/">
             Main Home
         </a>
-        <button onclick="window.location.href='/register'">회원가입</button>
-        <button onclick="window.location.href='/signIn'">로그인</button>
+        <div>
+            <button onclick="window.location.href='/register'">회원가입</button>
+            <button onclick="window.location.href='/signIn'">로그인</button>
+        </div>
+        
     </nav>
     <!--글쓰기 창-->
     <div class ="board_wrap">
@@ -100,22 +109,20 @@
         <div class = "board_list_wrap">
             <div class="board_list">
                 <div class="top">
-                    <table id = comment-list>
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th>title</th>
-                                
-                                <th>author</th>
-                                
-                                <th>date</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <!-- <div id = "contentdetail"></div> -->
                         <tbody id="contentdetail">
-                            <tr>
-                                <th><a href="/inquire"></a></th>
-                                <td></td>
-                                <td></td>
+                            <tr class="commentTable">
+                                <td><a href="/inquire"></a></td>
+                                <td>author</td>
+                                <td>date</td>
                             </tr>
                         </tbody>
                     </table>
@@ -144,7 +151,6 @@
             </div>
             <div class="bt_wrap">
                 <button onclick="window.location.href='/writedetail'">등록</button>
-                <!-- <button onclick="window.location.href='/register'">회원가입</button> -->
             </div>
         </div>
     </div>

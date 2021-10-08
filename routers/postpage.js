@@ -71,7 +71,7 @@ router.post("/register", async (req, res) => {
 //게시글 목록 조회(post_page)
 router.get("/list", async (req, res, next) => {
   try {
-    const postpages = await postpage.find({}).sort("-_id"); //db
+    const postpages = await postpage.find({}).sort("-date"); //db
     res.send({ list: postpages }); //db에서 postpage를 불러서 데이터가 res.send 값으로 보내주는것
   } catch (err) {
     console.error(err);
@@ -168,10 +168,11 @@ router.patch("/writedetail/:_id", async (req, res, next) => {
 });
 //........................................................................................//
 //댓글 작성 기능 
-router.post("/commentwrite/:_id", async (req, res) => {
+router.post("/commentwrite/:_id", userIdCheck, async (req, res) => {
   try {
     const postId = req.params;
     const { date, user, commentbox } = await req.body;
+    
     const updatetext = await postpage.findOneAndUpdate(
       {_id:postId},
       {
@@ -189,10 +190,10 @@ router.post("/commentwrite/:_id", async (req, res) => {
 });
 //..........................................................................................
 //댓글 삭제 기능
-router.delete("/commentwrite/:_id", async (req, res) => {
+router.delete("/commentwrite/:_id", userIdCheck, async (req, res) => {
   const postId = req.params;
   const {_dbId} = req.body; //find which 댓글
-
+  
   try {
     const post = await postpage.findOne({_id:postId}); //게시글찾기
     if (post === null) { //post==parents, comment=child
@@ -209,23 +210,36 @@ router.delete("/commentwrite/:_id", async (req, res) => {
 });
 //................................................................................................
 //댓글 수정 기능
-router.patch("/commentwrite/:_id", async (req, res) => {
+router.patch("/commentwrite/:_id", userIdCheck, async (req, res) => {
   const postId = req.params;
-  const {_dbId, comment} = req.body;
-  
+  const {modifyContent, _dbId} = req.body;
+  console.log(modifyContent);
+  console.log(_dbId);
   try {
     const post = await postpage.findOne({_id:postId}); //게시글찾기
     if (post === null) { //post==parents, comment=child
-      res.status(400).send({msg: '존재하지 않는 게시물입니다'});
+      res.status(400).send({msg: '댓글 내용이 있는지 확인해주세요'});
     } 
     const storage = post.comment.id(_dbId) // (==findbyId), subdocument 방식, POST 에 COMMENT 의 아이디값인 dbId를 찾기
-    storage.commentbox = comment //subdocument에서 commentbox를 comment로 교체 
+    storage.commentbox = modifyContent //subdocument에서 commentbox를 comment로 교체 
     post.save() //부모를 저장함
     res.status(200).send({msg: '댓글 수정을 완료했습니다' });
 
   } catch (err) {
-        res.status(400).send({ msg: "더이상 댓글이 존재하지 않습니다"});
+        res.status(400).send({msg: "더이상 댓글이 존재하지 않습니다"});
   }
 });
-
+//.............................................................
+//댓글 목록 조회
+router.get("/commentreview/:_id", async (req, res, next) => {
+  try {
+    const postId = req.params;
+    
+    const postpages = await postpage.find({_id:postId}).sort("-_id"); //db
+    res.send({ list: postpages }); //db에서 postpage를 불러서 데이터가 res.send 값으로 보내주는것
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
 module.exports = router;

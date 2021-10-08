@@ -2,11 +2,28 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const {schema} = mongoose;
+
+//댓글 관련 schema
+const commentBoxSchema = new mongoose.Schema ({
+    commentbox: {
+        type: String,
+        required: true
+    },
+    user : {
+        type: String,
+        required: true
+    },
+    date : {
+        type: Date,
+        required: true
+    }
+});
+//게시물 관련 schema
 const postpageSchema = new mongoose.Schema({
 
     date : {
         type: Date,
-        required: true,
+        default: Date.now
     },
     title : {
         type: String,
@@ -28,22 +45,6 @@ const postpageSchema = new mongoose.Schema({
     comment : {
         type: [commentBoxSchema],
         required: false
-    }
-
-});
-
-const commentBoxSchema = new Schema ({
-    commentbox: {
-        type: String,
-        required: true
-    },
-    user : {
-        type: String,
-        required: true
-    },
-    date : {
-        type: Date,
-        required: true
     }
 });
 

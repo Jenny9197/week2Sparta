@@ -36,8 +36,9 @@
             const urlParams = new URLSearchParams(queryString);
             const _id = urlParams.get("_id"); //
             inquireWindow(); //순차적으로 아래의 함수대로 진행
-
+                            //commentWindow 불러오기
             function inquireWindow(){
+                $("#commentdetail").html()
                 $.ajax({
                 url:`/api/writedetail/${_id}`, //ajax 안에 쿼리스트링 방법 적용 ** ("_id")는 라우터 값에서 불러온 것
                 type: 'GET',
@@ -56,6 +57,9 @@
                     $('#content').val(content);
                     
                     //(태그나 클래스나 id값을 불러와야 내용이 출력된다.)
+                    for (a of postdetail['comment']) {
+                       make_comment(a)
+                    }
 
                 }
                 });
@@ -70,11 +74,117 @@
                 alert('게시물창으로 이동하시겠습니까?')
                 window.location.href="/list" //수정 전 or 후에 게시물 목록으로 이동
             }
+
+            //댓글 작성
+            function commentWindow() {
+                let name = $("#commentPerson").val();
+                console.log()
+                let date = $("#postingDate").val();
+                console.log()
+                let content = $("#commentPage").val();
+                console.log()
+                $.ajax({
+                    url:`/api/commentwrite/${_id}`, //ajax 안에 쿼리스트링 방법 적용 ** ("_id")는 라우터 값에서 불러온 것
+                    type: 'POST',
+                    data: {
+                        user:name,
+                        date:date,
+                        commentbox:content,
+                    },
+                    success: function(response) {
+                        alert(response['msg']); //댓글 성공했을 경우
+                        window.location.reload(); //현 페이지 reboot 
+                    },
+                    error: function(error) {
+                        alert(error.responseJSON.msg); //댓글 오류났을 경우
+                    },
+                });
+            }
+            
+            //동적인 방법으로 댓글 생성하기
+            function make_comment(writeBox) {
+                let commentId = writeBox["_id"]
+                let date = writeBox["date"] //라우터 후 고치기
+                let name = writeBox["user"] //라우터 후 고치기
+                let content = writeBox["commentbox"] //라우터 후 고치기
+                console.log(writeBox); 
+                let temphtml = `<tr class="commentTable"> 
+                                    <td><a href="/inquire?_id=${commentId}">${name}</a></td>
+                                    <td>${date}</td>
+                                    <td>${content}</td>
+                                    <td><div class="btn">
+                                        <button type="button" id="deleteButton" class="btn btn-primary" onclick="commentDelete('${commentId}');">Delete</button>
+                                        <button type="button" id="editButton" class="btn btn-primary" onclick="commentModify('${commentId}');">Edit</button>
+                                    </div>
+                                    <input type="text" value='${content}' class="${commentId}">
+                                    </td>
+                                </tr>`
+                            
+                $("#commentdetail").append(temphtml)
+            }
+
+            
+
+            function del() {
+                alert('작성된 댓글이 삭제되었습니다');
+                window.location.reload();
+            }
+
+            //게시글 조회로부터 댓글 삭제 기능
+            function commentDelete(test) {
+                if(!confirm("댓글 삭제 하시겠습니까?")){
+                   return
+                }
+                $.ajax({
+                    type: "DELETE",
+                    url: `/api/commentwrite/${_id}`,
+                    data: {
+                        _dbId:test
+                    },
+                    success: function(response){
+                       alert(response['msg']);
+                       window.location.reload();
+                    },
+                    error: function(error){
+                        alert(error.responseJSON.msg);
+                        window.location.reload();
+                    }
+                })
+            }
+            
+            //게시글 조회로부터 댓글 수정 기능
+            //{commentId} received with test 
+            function commentModify(test) {
+                if(!confirm("댓글 수정 하시겠습니까?")){
+                    return
+                }
+                console.log(test);
+                let commentInput = $(`.${test}`).val() //commentInput 아이디인 input 의 value 값가져오기
+            
+                $.ajax({
+                    type: "PATCH",
+                    url: `/api/commentwrite/${_id}`,
+                    data: {
+                        _dbId:test,
+                        modifyContent:commentInput
+                    },
+                    success: function(response){
+                        alert(response['msg']);
+                        window.location.reload();
+                    },
+                    error: function(error){
+                        alert(error.responseJSON.msg);
+                        window.location.reload();
+                    }
+                })
+            }
+        
         </script>
         <style>
             body {
                 background-color: beige;
             }
+
             .bg-sparta {
                 background-color: #f595e5 !important;
             }
@@ -90,27 +200,124 @@
                 background-color: #ffffff !important;
                 border-color: #e8344e !important;
             }
-            .title {
+
+            .board {
                 margin: auto;
+                text-align: center;
             }
+
+            .btn, .btnInquire {
+                background-color: #555555;
+                border: none;
+                color: white;
+                padding: 3px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+            }
+            
         </style>
     </head>
 
     <body>
-        <div class="board_write">
-            <div class="title">
-                <label for="title">Title :</label>
+        <div>
+            <nav class="navbar navbar-expand-sm navbar-dark bg-sparta jusify-content-end">
+                <a class="navbar-brand" href="/">
+                    Main Home
+                </a>
+            </nav>
+            <div class="board">
+                <label for="title">제목 :</label>
                 <input type = "text" id="title" placeholder="Your title..."><br>
-                <label for="author">Author :</label>
+                <label for="author">글쓴이 :</label>
                 <input type = "text" id="author" placeholder="Your name..."><br>
-                <label for="date">Date :</label>
+                <label for="date">날짜 :</label>
                 <input type = "text" id="date" placeholder="Today's date"><br>
-                <label for="content">Subject :</label>
+                <label for="content">내용 :</label>
                 <input type = "text" id="content" placeholder="Write something.."><br>
             </div> 
+            <div class="btnInquire">
+                <button type="button" id="modButton" class="btn btn-primary" onclick="gotoedit()">수정창</button>
+                <button type="button" id="modButton" class="btn btn-primary" onclick="main()">게시판이동</button>
+                <!-- <button onclick="gotoedit()">수정하기</button>
+                <button onclick="main()">메인으로</button> -->
+            </div>
         </div>
-        <button onclick="gotoedit()">수정하기</button>
-        <button onclick="main()">메인으로</button>
+    </body>
+
+    <body>
+    
+        <table width="600" border="0" cellpadding="0" cellspacing="0" align="center">
+    
+            <tr>
+                <td width="600" colspan="4" height="3" bgcolor="#e6d4a6"></td>
+            </tr>
+    
+            <tr>
+                <td width="60" height="30" bgcolor="#eeeeee" align="center">작성자</td>
+                
+                <td width="240" height="30" style="padding-left: 10px;">
+                    <input type="text" id="commentPerson" size="35" maxlength="20"/>
+                </td>
+    
+                <td width="60" height="30" bgcolor="#eeeeee" align="center">
+                    작성날짜
+                </td>
+                <td width="240" height="30" style="padding-left: 10px;">
+                    <input type="text" id="postingDate" size="35" maxlength="50"/>
+                </td>
+            </tr>
+    
+            <tr>
+                <td width="600" colspan="4" height="1" bgcolor="#e6d4a6"></td>
+            </tr>
+    
+            <tr>
+                <td width="60" height="30" bgcolor="#eeeeee" align="center">
+                    내용
+                </td>
+                <td width="540" colspan="3" style="padding-left: 10px;">
+                    <textarea rows="3" cols="84" style="height: 50px;" id="commentPage">
+                    </textarea>
+                </td>
+            </tr>
+    
+            <tr>
+                <td width="600" colspan="4" height="1" bgcolor="#e6d4a6"></td>
+            </tr>
+    
+            <tr>
+                <td width="600" height="30" colspan="4" align="right" style="padding-right: 15px;">
+                    <button onclick="commentWindow()">확인</button>
+                    <button onclick="del()">삭제</button>
+                </td>
+                <div class="textarea container">
+                    <button>저장</button>
+                </div>
+            </tr>
+    
+        </table>
+    
+        <br /><br />
+        
+        <!-- 방명록 글 (=댓글창) 뜨는 부분 -->
+        <h5>Comment</h5>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Content</th>
+                </tr>
+            </thead>
+            <tbody id="commentdetail">
+              
+            </tbody>
+        </table>
+        
+        
     </body>
 </html>
 
