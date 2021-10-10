@@ -1,1 +1,1 @@
-# week2Sparta
+# personal project in week 2 
